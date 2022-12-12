@@ -37,6 +37,7 @@
 #define MAX_RETRY                      10
 #define MQTT_PUB_TEMP_SHT30            "esp32/sht30/temperature"
 #define MQTT_PUB_HUM_SHT30             "esp32/sht30/humidity"
+#define MQTT_PUB_STATUS                "esp32/status"
 
 #define RED_LED                         GPIO_NUM_32 
 #define GREEN_LED                       GPIO_NUM_33
@@ -60,10 +61,6 @@ static void set_direction(){
 static esp_err_t wifi_event_handler(void *arg, esp_event_base_t event_base,
                                     int32_t event_id, void *event_data)
 {
-    // gpio_set_direction(RED_LED, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(GREEN_LED, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(BLUE_LED, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(BUZZER, GPIO_MODE_OUTPUT);
     set_direction();
     switch (event_id)
     {
@@ -209,16 +206,15 @@ static void mqtt_app_start(void)
  */
 void Publisher_Task(void *params)
 {
-    char temper[12];
-    char humidi[12];
+    char temp[12];
+    char humi[12];
+    char stab[12] = "STABLE";
+    char warn[12] = "WARNING !!";
+    char crit[12] = "CRITICAL !!";
     float temperature;
     float humidity;
     TickType_t last_wakeup = xTaskGetTickCount();
 
-    // gpio_set_direction(RED_LED, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(GREEN_LED, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(BLUE_LED, GPIO_MODE_OUTPUT);
-    // gpio_set_direction(BUZZER, GPIO_MODE_OUTPUT);
     set_direction();
     while (true)
     {
@@ -229,30 +225,34 @@ void Publisher_Task(void *params)
         // wait until 5 seconds are over
         vTaskDelayUntil(&last_wakeup, pdMS_TO_TICKS(5000));
         // convert float to char
-		sprintf(temper, "%.2f", temperature);
-        sprintf(humidi, "%.2f", humidity);
+		sprintf(temp, "%.2f", temperature);
+        sprintf(humi, "%.2f", humidity);
 
         if(MQTT_CONNEECTED)
         {
-            esp_mqtt_client_publish(client, MQTT_PUB_TEMP_SHT30 , temper, 0, 0, 0);
-            esp_mqtt_client_publish(client, MQTT_PUB_HUM_SHT30 , humidi, 0, 0, 0);
+            esp_mqtt_client_publish(client, MQTT_PUB_TEMP_SHT30 , temp, 0, 0, 0);
+            esp_mqtt_client_publish(client, MQTT_PUB_HUM_SHT30 , humi, 0, 0, 0);
             if(temperature > 35){
                 gpio_set_level(BUZZER,1);
                 gpio_set_level(RED_LED,1);
                 gpio_set_level(GREEN_LED, 0);
                 gpio_set_level(BLUE_LED,0);
+                esp_mqtt_client_publish(client, MQTT_PUB_STATUS , crit, 0, 0, 0);
+
             }
             else if (temperature > 30){
                 gpio_set_level(RED_LED,1);
                 gpio_set_level(GREEN_LED, 1);
                 gpio_set_level(BLUE_LED,0);
                 gpio_set_level(BUZZER,0);
+                esp_mqtt_client_publish(client, MQTT_PUB_STATUS , warn, 0, 0, 0);
             }
             else{
                 gpio_set_level(GREEN_LED,1);
                 gpio_set_level(RED_LED,0);
                 gpio_set_level(BLUE_LED,0);
                 gpio_set_level(BUZZER,0);
+                esp_mqtt_client_publish(client, MQTT_PUB_STATUS , stab, 0, 0, 0);
             }
         }
         else
