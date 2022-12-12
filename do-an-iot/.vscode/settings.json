@@ -12,6 +12,19 @@
     "idf.toolsPathWin": "C:\\Users\\Admins\\.espressif",
     "idf.flashType": "UART",
     "files.associations": {
-        "string.h": "c"
-    }
+        "string.h": "c",
+        "mqtt.h": "c",
+        "esp_err.h": "c",
+        "mqtt_client.h": "c",
+        "stdbool.h": "c",
+        "esp_log.h": "c",
+        "esp_system.h": "c",
+        "esp_event.h": "c",
+        "cstring": "c",
+        "esp_wifi.h": "c",
+        "gpio.h": "c",
+        "i2c.h": "c",
+        "queue.h": "c"
+    },
+    "git.ignoreLimitWarning": true
 }

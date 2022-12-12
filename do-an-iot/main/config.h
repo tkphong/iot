@@ -3,11 +3,10 @@
 #define __CONFIG_H_
 
 /**
- * Wi-Fi SSID
+ * Wi-Fi 
  */
-#ifndef WIFI_SSID
+
 #define WIFI_SSID "A1"
-#endif
 
 /**
  * Wi-Fi password
@@ -20,7 +19,7 @@
  * MQTT broker hostname or IP
  */
 #ifndef MQTT_HOSTNAME
-#define MQTT_HOSTNAME "mqtt.flespi.io"
+#define MQTT_HOSTNAME "mqtt://127.0.0.1"
 #endif
 
 /**
@@ -35,7 +34,7 @@
  */
 // nho cap nhat token o ca 2 code
 #ifndef MQTT_USERNAME
-#define MQTT_USERNAME "FlespiToken lCG8yJPUWRc9awe3M2AaTuKcqd5N4Nvgd1cByPklwkiuGmogcOgW6QWmURXOujSx"
+#define MQTT_USERNAME "tkphong"
 #endif                  
 
 /**
@@ -43,7 +42,7 @@
  */
 // Nhap ten Topic muon pub len
 #ifndef MQTT_TOPIC
-#define MQTT_TOPIC "crawldata"
+#define MQTT_TOPIC "/topic/temp"
 #endif
 
 /**
@@ -52,7 +51,7 @@
 
 // Nhap Client ID
 #ifndef DEVICE_ID
-#define DEVICE_ID "b8jk2abf"
+#define DEVICE_ID "mqttx_c04fa076"
 #endif
 
 /**

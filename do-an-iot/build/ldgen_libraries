@@ -60,4 +60,5 @@ D:/IOT/do-an-iot/build/esp-idf/ulp/libulp.a
 D:/IOT/do-an-iot/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
 D:/IOT/do-an-iot/build/esp-idf/main/libmain.a
 D:/IOT/do-an-iot/build/esp-idf/i2cdev/libi2cdev.a
+D:/IOT/do-an-iot/build/esp-idf/protocol_examples_common/libprotocol_examples_common.a
 D:/IOT/do-an-iot/build/esp-idf/sht3x/libsht3x.a

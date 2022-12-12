@@ -404,6 +404,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("D:/IOT/do-an-iot/build/esp-idf/protocol_examples_common/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("D:/IOT/do-an-iot/build/esp-idf/sht3x/cmake_install.cmake")
 endif()
 

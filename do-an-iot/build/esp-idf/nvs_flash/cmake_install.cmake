@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Admins/esp/esp-idf/components/nvs_flash
+# Install script for directory: D:/IOT/do-an-iot/components/nvs_flash
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -2,53 +2,14 @@
 #define __MQTT_HANDLER_H_
 
 #include <esp_err.h>
+void wifi_init(void);
 
-/**
- * Structure with MQTT configuration data
- */
-typedef struct mqtt_handler_config
-{
-    /**
-	 * Hostname or IP of MQTT broker
-	 */
-    char *host;
-    /**
-	 * Topic ID for publishing measurements
-	 */
-    char *topic;
-} mqtt_handler_config_t;
+static esp_err_t wifi_event_handler(void *arg, esp_event_base_t event_base,
+                                    int32_t event_id, void *event_data);
 
-/**
- * Initialize MQTT protocol.
- * @param None
- */
-void mqtt_init(void);
+static void mqtt_app_start(void);
 
-/**
- * Initialize MQTT handler.
- * @param config  MQTT connection configuration
- */
-esp_err_t mqtt_handler_init(mqtt_handler_config_t config);
 
-/**
- * Connect to the broker and start MQTT communication.
- */
-esp_err_t mqtt_handler_start(void);
-
-/**
- * Deinitialize MQTT handler to free allocated resources
- */
-void mqtt_handler_deinit(void);
-
-/**
- * Stop MQTT communication and disconnect from the broker,
- */
-void mqtt_handler_stop(void);
-
-/**
- * Publish measured values serialized into JSON to configured topic.
- * @param values  sensors values
- */
 esp_err_t mqtt_handler_publish_values(float, float);
 
 static void mqtt_app_start(void);

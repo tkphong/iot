@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Admins/esp/esp-idf/components/newlib
+# Install script for directory: D:/IOT/do-an-iot/components/newlib
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

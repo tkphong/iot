@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Admins/esp/esp-idf/components/json
+# Install script for directory: D:/IOT/do-an-iot/components/json
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

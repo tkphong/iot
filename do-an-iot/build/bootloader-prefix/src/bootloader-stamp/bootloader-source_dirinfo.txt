@@ -4,6 +4,6 @@
 
 method=source_dir
 command=
-source_dir=C:/Users/Admins/esp/esp-idf/components/bootloader/subproject
+source_dir=D:/IOT/do-an-iot/components/bootloader/subproject
 work_dir=
 

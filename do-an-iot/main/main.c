@@ -19,8 +19,6 @@
 #include <driver/gpio.h>
 #include <lwip/err.h>
 #include <lwip/sys.h>
-#include "config.h"
-#include "wifi.h"
 #include "mqtt.h"
 /* float is used in printf(). you need non-default configuration in
  * sdkconfig for ESP8266, which is enabled by default for this
@@ -57,6 +55,7 @@ void task(void *pvParameters)
 
         // wait until 5 seconds are over
         vTaskDelayUntil(&last_wakeup, pdMS_TO_TICKS(5000));
+        mqtt_handler_publish_values(temperature, humidity);
     }
 }
 
@@ -128,6 +127,7 @@ void task(void *pvParameters)
 
         // Wait until 2 seconds (cycle time) are over.
         vTaskDelayUntil(&last_wakeup, pdMS_TO_TICKS(2000));
+        mqtt_handler_publish_values(temperature, humidity);
     }
 }
 
@@ -135,22 +135,23 @@ void task(void *pvParameters)
 
 void app_main()
 {
-    /* initialize NVS */ 
-    ESP_ERROR_CHECK(nvs_flash_init());
+    // /* initialize NVS */ 
+    // ESP_ERROR_CHECK(nvs_flash_init());
 
-    /* initialize NETIF */ 
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    // /* initialize NETIF */ 
+    // ESP_ERROR_CHECK(esp_netif_init());
+    // ESP_ERROR_CHECK(esp_event_loop_create_default());
 
-    /* Init Wifi */ 
-    ESP_LOGI(TAG, "WiFi init");
-    wifi_init();
+    // // /* Init Wifi */ 
+    // // ESP_LOGI(TAG, "WiFi init");
+    // // wifi_init();
 
-    /* Init and connect to MQTT */ 
+    // /* Init and connect to MQTT */ 
     ESP_LOGI(TAG, "Connecting to MQTT...");
-    mqtt_init();
-    mqtt_handler_start();
-
+    //mqtt_init();
+    wifi_init();
+    //mqtt_app_start();
+    // xTaskCreate(mqtt_handler_publish_values, "mqtt_handler_publish_values", 1024 * 5, NULL, 5, NULL);
     ESP_ERROR_CHECK(i2cdev_init());
     memset(&dev, 0, sizeof(sht3x_t));
 

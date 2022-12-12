@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "C:/Users/Admins/esp/esp-idf/components/bootloader/subproject"
+  "D:/IOT/do-an-iot/components/bootloader/subproject"
   "D:/IOT/do-an-iot/build/bootloader"
   "D:/IOT/do-an-iot/build/bootloader-prefix"
   "D:/IOT/do-an-iot/build/bootloader-prefix/tmp"
