@@ -35,9 +35,11 @@
 #define EXAMPLE_ESP_WIFI_SSID          "A1"
 #define EXAMPLE_ESP_WIFI_PASS          "88889999"
 #define MAX_RETRY                      10
-#define MQTT_PUB_TEMP_SHT30            "esp32/sht30/temperature"
+//#define MQTT_PUB_TEMP_SHT30            "esp32/sht30/temperature"
+#define MQTT_PUB_TEMP_SHT30            "crawldata"
 #define MQTT_PUB_HUM_SHT30             "esp32/sht30/humidity"
 #define MQTT_PUB_STATUS                "esp32/status"
+#define MQTT_SUB                       "esp32/sub"
 
 #define RED_LED                         GPIO_NUM_32 
 #define GREEN_LED                       GPIO_NUM_33
@@ -50,6 +52,7 @@ static void mqtt_app_start(void);
 static sht3x_t dev;
 
 uint32_t MQTT_CONNEECTED = 0;
+
 
 static void set_direction(){
     gpio_set_direction(RED_LED, GPIO_MODE_OUTPUT);
@@ -137,17 +140,16 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     esp_mqtt_event_handle_t event = event_data;
     esp_mqtt_client_handle_t client = event->client;
     int msg_id;
+    set_direction();
     switch ((esp_mqtt_event_id_t)event_id)
     {
     case MQTT_EVENT_CONNECTED:
         ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
         MQTT_CONNEECTED=1;
         
-        msg_id = esp_mqtt_client_subscribe(client, "/topic/test1", 0);
+        msg_id = esp_mqtt_client_subscribe(client, MQTT_SUB, 0);
         ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
 
-        msg_id = esp_mqtt_client_subscribe(client, "/topic/test2", 1);
-        ESP_LOGI(TAG, "sent subscribe successful, msg_id=%d", msg_id);
         break;
     case MQTT_EVENT_DISCONNECTED:
         ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
@@ -167,6 +169,11 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         ESP_LOGI(TAG, "MQTT_EVENT_DATA");
         printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
         printf("DATA=%.*s\r\n", event->data_len, event->data);
+        if(strcmp(event->data,"off")){
+            gpio_set_level(BUZZER,0);
+            gpio_set_level(RED_LED,0);
+            vTaskDelay(20000 / portTICK_PERIOD_MS);
+        }
         break;
     case MQTT_EVENT_ERROR:
         ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
@@ -206,14 +213,16 @@ static void mqtt_app_start(void)
  */
 void Publisher_Task(void *params)
 {
-    char temp[12];
-    char humi[12];
-    char stab[12] = "STABLE";
-    char warn[12] = "WARNING !!";
-    char crit[12] = "CRITICAL !!";
+    char temp[10];
+    char humi[10];
+    char kq[11] = {};
+    char stab[10] = "STABLE";
+    char warn[10] = "WARNING !!";
+    char crit[10] = "CRITICAL !!";
     float temperature;
     float humidity;
     TickType_t last_wakeup = xTaskGetTickCount();
+
 
     set_direction();
     while (true)
@@ -225,13 +234,17 @@ void Publisher_Task(void *params)
         // wait until 5 seconds are over
         vTaskDelayUntil(&last_wakeup, pdMS_TO_TICKS(5000));
         // convert float to char
-		sprintf(temp, "%.2f", temperature);
+        sprintf(temp, "%.2f", temperature);
         sprintf(humi, "%.2f", humidity);
-
+        strcat(kq, temp); // temp humi
+        strcat(kq, " ");
+        strcat(kq, humi);
+        strcat(kq, " ");
         if(MQTT_CONNEECTED)
         {
-            esp_mqtt_client_publish(client, MQTT_PUB_TEMP_SHT30 , temp, 0, 0, 0);
-            esp_mqtt_client_publish(client, MQTT_PUB_HUM_SHT30 , humi, 0, 0, 0);
+            //printf("%s ",kq);
+            esp_mqtt_client_publish(client, MQTT_PUB_TEMP_SHT30 , kq, 11, 0, 0);
+            //esp_mqtt_client_publish(client, MQTT_PUB_HUM_SHT30 , humi, 0, 0, 0);
             if(temperature > 35){
                 gpio_set_level(BUZZER,1);
                 gpio_set_level(RED_LED,1);
@@ -260,7 +273,11 @@ void Publisher_Task(void *params)
             ESP_LOGE(TAG, "MQTT Not connected");
         }
         vTaskDelay(5000 / portTICK_PERIOD_MS);
+        kq[0] = '\0';
+        memset(kq,0,sizeof(kq));
+        printf("%s ",kq);
     }
+
 }
 
 #elif defined(CONFIG_EXAMPLE_SHT3X_DEMO_LL)

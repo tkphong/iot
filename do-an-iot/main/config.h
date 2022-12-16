@@ -19,7 +19,7 @@
  * MQTT broker hostname or IP
  */
 #ifndef MQTT_HOSTNAME
-#define MQTT_HOSTNAME "mqtt://127.0.0.1"
+#define MQTT_HOSTNAME "mqtt://broker.emqx.io"
 #endif
 
 /**
@@ -42,7 +42,7 @@
  */
 // Nhap ten Topic muon pub len
 #ifndef MQTT_TOPIC
-#define MQTT_TOPIC "/topic/temp"
+#define MQTT_TOPIC "crawldata"
 #endif
 
 /**
@@ -51,7 +51,7 @@
 
 // Nhap Client ID
 #ifndef DEVICE_ID
-#define DEVICE_ID "mqttx_c04fa076"
+#define DEVICE_ID "mqttx_ada691c6"
 #endif
 
 /**
